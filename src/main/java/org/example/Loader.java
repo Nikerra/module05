@@ -5,20 +5,22 @@ import java.util.List;
 
 public class Loader {
     private static final Box box = new Box();
-    private Truck truck = new Truck();
+    private final Truck truck = new Truck();
     private final PieceLuck pieceLuck = new PieceLuck();
-    boolean reportLoadTruckFlag = false;
-    private static List<ArrayList<Integer>> boxIntoTruck = new ArrayList<>();
+    private Driver driver = new Driver();
 
-
+    /**
+     * Старт работы грузчика
+     * проверяет кол-во поездок(каждую пятую добавить на склад кусочков счастья)
+     * проверяет кол-во кусочков(если их нет то завершает работу иначе
+     * берет коробку грузит в нее максимально допустимое кол-во
+     * и грузит коробку в грузовик)
+     * Сообщает водителю, что можно ехать
+     */
     void workBox() {
-        Driver driver = new Driver();
-        if (driver.getCountDrive() % 5 == 0 && driver.getCountDrive() !=0) {
-            pieceLuck.addPieceLuck();
-        }
-        if (pieceLuck.getPieceLuck() == 0) {
-            new Warehouse().finishWork();
-        }
+        driver.isFiveDrive();
+        new Warehouse().isFinishWork();
+
         for (int countBox = 1; countBox <= truck.getMAX_CAPACITY_TRUCK(); countBox++) {
             List<Integer> boxPieceLuckLocal = new ArrayList<>(4);
             if (pieceLuck.getPieceLuck() > 0) {
@@ -32,11 +34,13 @@ public class Loader {
                 }
             }
         }
-        if (reportLoadTruck()) {
-            driver.waitForDownload(reportLoadTruckFlag);
-        }
+        driver.waitForDownload(reportLoadTruck());
     }
 
+    /**
+     * @param boxPieceLuck грузит в коробку
+     * @return коробку - массив
+     */
     private ArrayList<Integer> loadIntoBox(List<Integer> boxPieceLuck) {
         int pieceLuckCountLocal = 0;
         if (pieceLuck.getPieceLuck() >= 4) {
@@ -64,45 +68,49 @@ public class Loader {
         return (ArrayList<Integer>) boxPieceLuck;
     }
 
+    /**
+     * @param boxPieceLuck принимает массив коробку и грузит его в массив грузовик
+     */
     private void loadIntoTruck(ArrayList<Integer> boxPieceLuck) {
 
         if (truck.checkHowManyBoxesInTruck()) {
-            boxIntoTruck.add(boxPieceLuck);
+            truck.setBoxIntoTruck(boxPieceLuck);
             truck.addHowManyBoxesInTruck();
             System.out.printf("Загруженно %d из %d коробок", truck.getHowManyBoxesInTruck() , truck.getMAX_CAPACITY_TRUCK());
             System.out.println();
-            System.out.println("Коробки в грузовике:" + boxIntoTruck);
+            System.out.println("Коробки в грузовике:" + truck.getBoxIntoTruck());
         }
     }
 
+    /**
+     * @return true если в грузовике есть хоть одна коробка
+     */
     private boolean reportLoadTruck() {
-        if (truck.getHowManyBoxesInTruck() != 0) {
-            return reportLoadTruckFlag = true;
-        } else {
-            return reportLoadTruckFlag;
-        }
+        return  truck.getHowManyBoxesInTruck() > 0;
     }
 
+    /**
+     * @param flag разгружаем коробки пока грузовик не будет пуст
+     * после чего @return flag установленный в false
+     */
     boolean unloadTruck(boolean flag) {
         System.out.println("Начинается разгрузка грузовика");
-        System.out.println("Коробки в грузовике:" + boxIntoTruck);
-        int i = 0;
+        System.out.println("Коробки в грузовике:" + truck.getBoxIntoTruck());
+        int boxUnloadTruckCount = 0;
         while (flag) {
-            int boxUnloadTruckCount = 0;
             if (truck.getHowManyBoxesInTruck() > 0) {
-                System.out.printf("Разгружено %d из %d коробок", (i+1), truck.getMAX_CAPACITY_TRUCK());
-                boxIntoTruck.remove(boxUnloadTruckCount);
-                boxUnloadTruckCount--;
+                System.out.printf("Разгружено %d из %d коробок", (boxUnloadTruckCount+1), truck.getMAX_CAPACITY_TRUCK());
+                truck.remove(truck.getBoxIntoTruck().size() - 1);
                 truck.negativeHowManyBoxesInTruck();
                 System.out.println();
-                System.out.println("Коробки в грузовике" + boxIntoTruck);
+                System.out.println("Коробки в грузовике:" + truck.getBoxIntoTruck());
             } else {
                 System.out.println("Разгрузка грузовика окончена");
                 flag = false;
             }
-            i++;
+            boxUnloadTruckCount++;
         }
-        boxIntoTruck = new ArrayList<>();
         return flag;
     }
 }
+
