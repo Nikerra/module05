@@ -1,36 +1,34 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Loader {
     private static final Box box = new Box();
-    private final int[] MAX_CAPACITY_TRUCK = new int[10];
-    private static int howManyBoxesInTruck = 0;
-    boolean reportLoadTruckFlag = false;
-    private static int idBox = box.getIdBox();
+    private Truck truck = new Truck();
     private final PieceLuck pieceLuck = new PieceLuck();
+    boolean reportLoadTruckFlag = false;
+    private static List<ArrayList<Integer>> boxIntoTruck = new ArrayList<>();
 
-
-    public int getIdBox() {
-        return idBox;
-    }
 
     void workBox() {
         Driver driver = new Driver();
-        if (driver.getCountDrive() % 5 == 0){
+        if (driver.getCountDrive() % 5 == 0 && driver.getCountDrive() !=0) {
             pieceLuck.addPieceLuck();
         }
         if (pieceLuck.getPieceLuck() == 0) {
             new Warehouse().finishWork();
         }
-        int countBox = 1;
-        for (; countBox <= MAX_CAPACITY_TRUCK.length; countBox++) {
+        for (int countBox = 1; countBox <= truck.getMAX_CAPACITY_TRUCK(); countBox++) {
+            List<Integer> boxPieceLuckLocal = new ArrayList<>(4);
             if (pieceLuck.getPieceLuck() > 0) {
                 System.out.println("Грузчик берет коробку");
-                box.setIdBox(++idBox);
-                System.out.println("Присваевает коробки новый id:" + box.getIdBox());
-                loadIntoBox();
-                if (box != null && pieceLuck.getPieceLuck() > 0) {
+                box.setIdBox();
+                System.out.println("Присваивает коробки новый id:" + box.getIdBox());
+                ArrayList<Integer> boxPieceLuck = loadIntoBox(boxPieceLuckLocal);
+                if (boxPieceLuck != null) {
                     System.out.println("Идет загружать коробку в грузовик");
-                    loadIntoTruck();
+                    loadIntoTruck(boxPieceLuck);
                 }
             }
         }
@@ -39,37 +37,46 @@ public class Loader {
         }
     }
 
-    private Box loadIntoBox() {
-        int pieceLuckCount = 0;
+    private ArrayList<Integer> loadIntoBox(List<Integer> boxPieceLuck) {
+        int pieceLuckCountLocal = 0;
         if (pieceLuck.getPieceLuck() >= 4) {
             System.out.println("Загружает в нее 4 кусочка счастья");
-            int MAX_CAPACITY_BOX = 4;
-            for (int i = 1; i <= MAX_CAPACITY_BOX; i++) {
-                System.out.println("Загружено кусочек счастья номер:" + i);
-                pieceLuckCount++;
+            for (int i = 1; i <= box.getMAX_CAPACITY_BOX(); i++) {
+//                System.out.println("Загружено кусочек счастья номер:" + i);
+                boxPieceLuck.add(i);
+                pieceLuck.setPieceLuckCount();
+                pieceLuckCountLocal++;
             }
         } else {
+            boxPieceLuck = new ArrayList<>(pieceLuck.getPieceLuck());
             System.out.printf("Загружает в нее %d кусочка счастья%n", pieceLuck.getPieceLuck());
             for (int i = 1; i <= pieceLuck.getPieceLuck(); i++) {
-                System.out.println("Загружено кусочек счастья номер:" + i);
-                pieceLuckCount++;
+//                System.out.println("Загружено кусочек счастья номер:" + i);
+                boxPieceLuck.add(i);
+                pieceLuck.setPieceLuckCount();
+                pieceLuckCountLocal++;
             }
         }
-        pieceLuck.negativePieceLuck(pieceLuckCount);
+        System.out.println(boxPieceLuck);
+        pieceLuck.negativePieceLuck(pieceLuckCountLocal);
         System.out.printf("На складе осталось %d кусочков счастья", pieceLuck.getPieceLuck());
         System.out.println();
-        return box;
+        return (ArrayList<Integer>) boxPieceLuck;
     }
 
-    private void loadIntoTruck() {
-        if (howManyBoxesInTruck != MAX_CAPACITY_TRUCK.length) {
-            System.out.printf("Загруженно %d/%d коробок", ++howManyBoxesInTruck, MAX_CAPACITY_TRUCK.length);
+    private void loadIntoTruck(ArrayList<Integer> boxPieceLuck) {
+
+        if (truck.checkHowManyBoxesInTruck()) {
+            boxIntoTruck.add(boxPieceLuck);
+            truck.addHowManyBoxesInTruck();
+            System.out.printf("Загруженно %d из %d коробок", truck.getHowManyBoxesInTruck() , truck.getMAX_CAPACITY_TRUCK());
             System.out.println();
+            System.out.println("Коробки в грузовике:" + boxIntoTruck);
         }
     }
 
     private boolean reportLoadTruck() {
-        if (howManyBoxesInTruck != 0) {
+        if (truck.getHowManyBoxesInTruck() != 0) {
             return reportLoadTruckFlag = true;
         } else {
             return reportLoadTruckFlag;
@@ -78,15 +85,24 @@ public class Loader {
 
     boolean unloadTruck(boolean flag) {
         System.out.println("Начинается разгрузка грузовика");
+        System.out.println("Коробки в грузовике:" + boxIntoTruck);
+        int i = 0;
         while (flag) {
-            if (howManyBoxesInTruck > 0) {
-                System.out.printf("Разгруженно %d коробок", howManyBoxesInTruck--);
+            int boxUnloadTruckCount = 0;
+            if (truck.getHowManyBoxesInTruck() > 0) {
+                System.out.printf("Разгружено %d из %d коробок", (i+1), truck.getMAX_CAPACITY_TRUCK());
+                boxIntoTruck.remove(boxUnloadTruckCount);
+                boxUnloadTruckCount--;
+                truck.negativeHowManyBoxesInTruck();
                 System.out.println();
+                System.out.println("Коробки в грузовике" + boxIntoTruck);
             } else {
                 System.out.println("Разгрузка грузовика окончена");
                 flag = false;
             }
+            i++;
         }
+        boxIntoTruck = new ArrayList<>();
         return flag;
     }
 }

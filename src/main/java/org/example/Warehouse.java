@@ -10,7 +10,9 @@ public class Warehouse {
     }
     void finishWork(){
         System.out.println("Работа по перевозке кусочков счастья завершена");
-        System.out.printf("Было перевезено %d коробок", new Loader().getIdBox());
+        System.out.printf("Было перевезено %d кусочков счастья", new PieceLuck().getPieceLuckCount());
+        System.out.println();
+        System.out.printf("Было перевезено %d коробок", new Box().getIdBox());
         System.out.println();
         System.out.printf("Было совершенно всего поездок:%d", new Driver().getCountDrive());
         System.out.println();
