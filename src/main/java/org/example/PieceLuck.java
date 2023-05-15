@@ -1,34 +1,21 @@
 package org.example;
 
 public class PieceLuck {
+    public static int pieceLuck;
 
 
-    private static int pieceLuck = 10_591;
-    private static int pieceLuckCount = 0;
+    public PieceLuck() {}
 
-
-    void setPieceLuckCount() {
-        PieceLuck.pieceLuckCount++;
+    public PieceLuck(int pieceLuck) {
+        PieceLuck.pieceLuck = pieceLuck;
     }
-    int getPieceLuckCount() {return pieceLuckCount;}
 
-    int getPieceLuck() {
+    public int getPieceLuck() {
         return pieceLuck;
     }
 
-    /**
-     * @param pieceLuck
-     * уменьшаем кол-во кусочков счастья
-     */
-    void negativePieceLuck(int pieceLuck) {
-        PieceLuck.pieceLuck -= pieceLuck;
-    }
-
-    /**
-     * каждую 5ю поездку добавляем кусочки счастья
-     */
-    void addPieceLuck() {
-        pieceLuck += 112;
+    public  void setPieceLuck(int pieceLuck) {
+        PieceLuck.pieceLuck = pieceLuck;
     }
 }
 

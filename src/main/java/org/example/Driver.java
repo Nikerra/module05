@@ -7,9 +7,9 @@ public class Driver {
     /**
      * Проверяем кол-во поездок, если поездка пятая или кратная пяти то увеличиваем кол-во кусочков счастья
      */
-    void isFiveDrive(){
+    void isFiveDrive(Warehouse warehouse, PieceLuck pieceLuck){
         if (getCountDrive() % 5 == 0 && getCountDrive() != 0) {
-            new PieceLuck().addPieceLuck();
+            warehouse.positivePieceLuck(pieceLuck);
         }
     }
 
@@ -24,16 +24,17 @@ public class Driver {
     /**
      * Эмуляция поездки парковки и ожидания разгрузки грузовика
      */
-    private void driveTruck(){
-        new Truck().drive();
+    private void driveTruck(Truck truck, Loader loader) {
+        truck.drive();
         parking();
-        waitUnloadTruck();
+        Driver driver = new Driver();
+        waitUnloadTruck(truck, loader, driver);
     }
 
     /**
      * Эмуляция парковки
      */
-    private void parking(){
+    private void parking() {
         System.out.println("Паркуется");
         countDrive++;
     }
@@ -41,23 +42,23 @@ public class Driver {
     /**
      * @param flag при получении true грузовик загружен и вызываем эмулятор поездки
      */
-    void waitForDownload(boolean flag){
+    void waitForDownload(boolean flag, Truck truck, Loader loader) {
         if (flag){
             System.out.println("Грузовик загружен");
-            driveTruck();
+            driveTruck(truck, loader);
         }
     }
 
     /**
      * Эмуляция разгрузки грузовика, его обратной поездки парковки и вызова нового цикла его загрузки
      */
-    private void waitUnloadTruck(){
+    private void waitUnloadTruck(Truck truck, Loader loader, Driver driver) {
         System.out.println("Ждет разгрузки");
-        boolean flag = new Loader().unloadTruck(true);
+        boolean flag = loader.unloadTruck(true, truck);
         if (!flag) {
-            new Truck().drive();
+            truck.drive();
             parking();
-            new Loader().workBox();
+            loader.workBox(new PieceLuck(), driver, truck);
         }
     }
 }

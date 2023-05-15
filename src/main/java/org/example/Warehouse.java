@@ -1,13 +1,18 @@
 package org.example;
 
 public class Warehouse {
+    private static int pieceLuckCount = 0;
+
+
     /**
      *  Краткое описание начала работы
      */
-    void startWork(){
+    void startWork(PieceLuck pieceLuck){
         System.out.println("Работа по перевозке кусочков счастья начинается");
-        System.out.println("На складе находится кусочков счастья в количестве=" + new PieceLuck().getPieceLuck());
-        new Loader().workBox();
+        System.out.println("На складе находится кусочков счастья в количестве=" + pieceLuck.getPieceLuck());
+        Driver driver = new Driver();
+        Truck truck = new Truck();
+        new Loader().workBox(pieceLuck, driver, truck);
     }
 
     /**
@@ -15,7 +20,7 @@ public class Warehouse {
      */
     void finishWork(){
         System.out.println("Работа по перевозке кусочков счастья завершена");
-        System.out.printf("Было перевезено %d кусочков счастья", new PieceLuck().getPieceLuckCount());
+        System.out.printf("Было перевезено %d кусочков счастья", getPieceLuckCount());
         System.out.println();
         System.out.printf("Было перевезено %d коробок", new Box().getIdBox());
         System.out.println();
@@ -28,10 +33,35 @@ public class Warehouse {
     /**
      * Проверка наличия кусочков счастья на складе, если их нет то вызываем метод завершения работы
      */
-    void isFinishWork() {
-        if (new PieceLuck().getPieceLuck() == 0) {
+    void isFinishWork(PieceLuck pieceLuck) {
+        if (pieceLuck.getPieceLuck() == 0) {
             finishWork();
         }
+    }
+
+    void setPieceLuckCount() {
+        pieceLuckCount++;
+    }
+    private int getPieceLuckCount() {return pieceLuckCount;}
+
+
+    /**
+     * @param
+     * уменьшаем кол-во кусочков счастья
+     */
+    void negativePieceLuck(int pieceLuckCount, PieceLuck pieceLuck) {
+        int value = pieceLuck.getPieceLuck();
+        value -= pieceLuckCount;
+        pieceLuck.setPieceLuck(value);
+    }
+
+    /**
+     * каждую 5ю поездку добавляем кусочки счастья
+     */
+    void positivePieceLuck(PieceLuck pieceLuck) {
+        int value = pieceLuck.getPieceLuck();
+        value += 112;
+        pieceLuck.setPieceLuck(value);
     }
 
 }

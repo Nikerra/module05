@@ -6,7 +6,7 @@ import java.util.List;
 public class Truck {
     private static int howManyBoxesInTruck = 0;
     private final int MAX_CAPACITY_TRUCK = 10;
-    private static List<ArrayList<Integer>> boxIntoTruck = new ArrayList<>();
+    private static final List<ArrayList<Integer>> boxIntoTruck = new ArrayList<>();
 
 
     /**
