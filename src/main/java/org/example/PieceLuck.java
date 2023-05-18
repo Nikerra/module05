@@ -3,6 +3,10 @@ package org.example;
 public class PieceLuck {
     public static int pieceLuck;
 
+    @Override
+    public String toString() {
+        return "PieceLuck";
+    }
 
     public PieceLuck() {}
 
@@ -12,10 +16,6 @@ public class PieceLuck {
 
     public int getPieceLuck() {
         return pieceLuck;
-    }
-
-    public  void setPieceLuck(int pieceLuck) {
-        PieceLuck.pieceLuck = pieceLuck;
     }
 }
 

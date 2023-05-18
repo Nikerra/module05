@@ -21,7 +21,7 @@ public class Box {
     /**
      * @return size box
      */
-    public int getMAX_CAPACITY_BOX() {
+    int getMAX_CAPACITY_BOX() {
         return MAX_CAPACITY_BOX;
     }
 }

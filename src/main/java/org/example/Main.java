@@ -39,6 +39,7 @@ public class Main
     public static void main( String[] args ) {
         PieceLuck pieceLuck = new PieceLuck(10_591);
         Warehouse warehouse = new Warehouse();
-        warehouse.startWork(pieceLuck);
+        Manager manager = new Manager();
+        manager.startWork();
     }
 }

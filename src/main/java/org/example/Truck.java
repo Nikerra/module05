@@ -6,7 +6,7 @@ import java.util.List;
 public class Truck {
     private static int howManyBoxesInTruck = 0;
     private final int MAX_CAPACITY_TRUCK = 10;
-    private static final List<ArrayList<Integer>> boxIntoTruck = new ArrayList<>();
+    private static final List<ArrayList<PieceLuck>> boxIntoTruck = new ArrayList<>();
 
 
     /**
@@ -19,7 +19,7 @@ public class Truck {
     /**
      * @return возвращаем массив в котором лежат наши коробки
      */
-    List<ArrayList<Integer>> getBoxIntoTruck() {
+    List<ArrayList<PieceLuck>> getBoxIntoTruck() {
         return boxIntoTruck;
     }
 
@@ -27,7 +27,7 @@ public class Truck {
      * @param boxIntoTruck
      * Добавляем наши коробки в грузовик
      */
-    void setBoxIntoTruck(ArrayList<Integer> boxIntoTruck) {
+    void setBoxIntoTruck(ArrayList<PieceLuck> boxIntoTruck) {
         Truck.boxIntoTruck.add(boxIntoTruck);
     }
 
@@ -57,7 +57,8 @@ public class Truck {
     /**
      * Эмуляция поездки грузовика
      */
-    void drive(){
+    void drive() {
+
         System.out.println("Грузовик едет со склада на склад");
         for (int i = 0; i < 10; i++) {
             System.out.print("*");
