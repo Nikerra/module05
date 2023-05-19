@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Loader {
-    private static final Box box = new Box();
+
+    private static int countBox;
+
+    public  int getCountBox() {
+        return countBox;
+    }
 
     /**
      * Метод по загрузке кусочков в коробки и дальнейшей загрузки в грузовик
@@ -16,12 +21,13 @@ public class Loader {
      */
     void workBox(Warehouse warehouseA, Truck truck, ArrayList<PieceLuck> pieceLucks) {
 
-        for (int countBox = 1; countBox <= truck.getMAX_CAPACITY_TRUCK(); countBox++) {
+        for (int i = 1; i <= truck.getMAX_CAPACITY_TRUCK(); i++) {
             if (pieceLucks.size() > 0) {
+                ++countBox;
                 System.out.println("Грузчик берет коробку");
-                box.setIdBox();
+                Box box = new Box(countBox);
                 System.out.println("Присваивает коробки новый id:" + box.getIdBox());
-                ArrayList<PieceLuck> boxPieceLuck = loadIntoBox(warehouseA);
+                ArrayList<Box> boxPieceLuck = box.loadIntoBox(warehouseA);
                 System.out.println("Идет загружать коробку в грузовик");
                 loadIntoTruck(boxPieceLuck, truck);
             }
@@ -31,34 +37,34 @@ public class Loader {
     /**
      * Принимаем данные о складе и грузим кусочки счастья со склада в коробки
      */
-    private ArrayList<PieceLuck> loadIntoBox(Warehouse warehouse) {
-
-        ArrayList<PieceLuck> boxPieceLuck = new ArrayList<>();
-        if (warehouse.getPieceLucks().size() >= 4) {
-            System.out.println("Загружает в нее 4 кусочка счастья");
-            for (int i = 0; i < box.getMAX_CAPACITY_BOX(); i++) {
-                boxPieceLuck.add(warehouse.getPieceLucks().get(0));
-                warehouse.getPieceLucks().remove(0);
-                warehouse.setPieceLuckCount();
-            }
-        } else {
-            System.out.printf("Загружает в нее %d кусочка счастья%n", warehouse.getPieceLucks().size());
-            while (!warehouse.getPieceLucks().isEmpty()) {
-                boxPieceLuck.add(warehouse.getPieceLucks().get(0));
-                warehouse.getPieceLucks().remove(0);
-                warehouse.setPieceLuckCount();
-            }
-        }
-        System.out.println("Коробка № " + box.getIdBox() + " с кусочками счастья:" + boxPieceLuck);
-        System.out.printf("На складе осталось %d кусочков счастья", warehouse.getPieceLucks().size());
-        System.out.println();
-        return boxPieceLuck;
-    }
+//    private ArrayList<PieceLuck> loadIntoBox(Warehouse warehouse) {
+//
+//        ArrayList<PieceLuck> boxPieceLuck = new ArrayList<>();
+//            if (warehouse.getPieceLucksHeap().size() >= 4) {
+//            System.out.println("Загружает в нее 4 кусочка счастья");
+//            for (int i = 0; i < getMAX_CAPACITY_BOX(); i++) {
+//                boxPieceLuck.add(warehouse.getPieceLucksHeap().get(0));
+//                warehouse.getPieceLucksHeap().remove(0);
+//                warehouse.setPieceLuckCount();
+//            }
+//        } else {
+//            System.out.printf("Загружает в нее %d кусочка счастья%n", warehouse.getPieceLucksHeap().size());
+//            while (!warehouse.getPieceLucksHeap().isEmpty()) {
+//                boxPieceLuck.add(warehouse.getPieceLucksHeap().get(0));
+//                warehouse.getPieceLucksHeap().remove(0);
+//                warehouse.setPieceLuckCount();
+//            }
+//        }
+//        System.out.println("Коробка № " + getIdBox() + " с кусочками счастья:" + boxPieceLuck);
+//        System.out.printf("На складе осталось %d кусочков счастья", warehouse.getPieceLucksHeap().size());
+//        System.out.println();
+//        return boxPieceLuck;
+//    }
 
     /**
      * @param boxPieceLuck принимает массив коробку и грузит его в массив грузовик
      */
-    private void loadIntoTruck(ArrayList<PieceLuck> boxPieceLuck, Truck truck) {
+    private void loadIntoTruck(ArrayList<Box> boxPieceLuck, Truck truck) {
 
         if (truck.checkHowManyBoxesInTruck()) {
             truck.addBoxIntoTruck(boxPieceLuck);
@@ -73,7 +79,7 @@ public class Loader {
      * Если в грузовике 10 коробок или если есть хотя бы одна коробка когда кусочков счастья на складе не осталось
      */
     void reportLoadTruck(Truck truck, Warehouse warehouse) {
-        if ((truck.getHowManyBoxesInTruck() == 10) || (truck.getHowManyBoxesInTruck() > 0 && warehouse.getPieceLucks().isEmpty())) {
+        if ((truck.getHowManyBoxesInTruck() == 10) || (truck.getHowManyBoxesInTruck() > 0 && warehouse.getPieceLucksHeap().isEmpty())) {
             System.out.println("Грузовик загружен");
         }
     }

@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class Warehouse {
     private static int pieceLuckCount = 0;
-    private  static final ArrayList<PieceLuck> pieceLucks = new ArrayList<>();
+    private  static final ArrayList<PieceLuck> pieceLucksHeap = new ArrayList<>();
 
     /**
      * Создаем массив содержащий ноши кусочки в массиве
      */
     static {
         for (int i = 0; i < new PieceLuck().getPieceLuck(); i++){
-            pieceLucks.add(new PieceLuck());
+            pieceLucksHeap.add(new PieceLuck());
         }
     }
 
-    public  ArrayList<PieceLuck> getPieceLucks() {
-        return pieceLucks;
+    public  ArrayList<PieceLuck> getPieceLucksHeap() {
+        return pieceLucksHeap;
     }
 
     void setPieceLuckCount() {
@@ -30,7 +30,7 @@ public class Warehouse {
      */
     void addPieceLuck() {
         for (int i = 0; i < 112; i++) {
-            pieceLucks.add(new PieceLuck());
+            pieceLucksHeap.add(new PieceLuck());
         }
     }
 }

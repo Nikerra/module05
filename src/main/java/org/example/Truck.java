@@ -6,7 +6,7 @@ import java.util.List;
 public class Truck {
     private static int howManyBoxesInTruck = 0;
     private final int MAX_CAPACITY_TRUCK = 10;
-    private static final List<ArrayList<PieceLuck>> boxIntoTruck = new ArrayList<>();
+    private static final List<ArrayList<Box>> boxIntoTruck = new ArrayList<ArrayList<Box>>();
 
 
     /**
@@ -19,7 +19,7 @@ public class Truck {
     /**
      * @return возвращаем массив в котором лежат наши коробки
      */
-    List<ArrayList<PieceLuck>> getBoxIntoTruck() {
+    List<ArrayList<Box>> getBoxIntoTruck() {
         return boxIntoTruck;
     }
 
@@ -27,7 +27,7 @@ public class Truck {
      * @param boxIntoTruck
      * Добавляем наши коробки в грузовик
      */
-    void addBoxIntoTruck(ArrayList<PieceLuck> boxIntoTruck) {
+    void addBoxIntoTruck(ArrayList<Box> boxIntoTruck) {
         Truck.boxIntoTruck.add(boxIntoTruck);
     }
 

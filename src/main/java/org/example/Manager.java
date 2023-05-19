@@ -30,7 +30,7 @@ public class Manager {
             driver.driveTruck(truck,loader);
         }
         if (isFinishWork()){
-            finishWork(driver);
+            finishWork(driver, loader);
         }
     }
 
@@ -46,11 +46,11 @@ public class Manager {
     /**
      * Выводим в консоль данные о проведенной работе
      */
-    void finishWork(Driver driver){
+    void finishWork(Driver driver, Loader loader){
         System.out.println("Работа по перевозке кусочков счастья завершена");
         System.out.printf("Было перевезено %d кусочков счастья", warehouseA.getPieceLuckCount());
         System.out.println();
-        System.out.printf("Было перевезено %d коробок", new Box().getIdBox());
+        System.out.printf("Было перевезено %d коробок", loader.getCountBox());
         System.out.println();
         System.out.printf("Было совершенно всего поездок:%d", driver.getCountDrive());
         System.out.println();
@@ -58,7 +58,7 @@ public class Manager {
         System.out.println();
     }
     private ArrayList<PieceLuck> resultCheckPieceLuckWarehouse() {
-        return warehouseA.getPieceLucks();
+        return warehouseA.getPieceLucksHeap();
     }
 
     /**

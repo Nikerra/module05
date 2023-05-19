@@ -1,6 +1,6 @@
 package org.example;
 
-public class PieceLuck {
+public class PieceLuck extends Box {
     public static int pieceLuck = 10_591;
 
     @Override
