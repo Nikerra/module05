@@ -1,7 +1,7 @@
 package org.example;
 
 public class PieceLuck {
-    public static int pieceLuck;
+    public static int pieceLuck = 10_591;
 
     @Override
     public String toString() {
@@ -9,10 +9,6 @@ public class PieceLuck {
     }
 
     public PieceLuck() {}
-
-    public PieceLuck(int pieceLuck) {
-        PieceLuck.pieceLuck = pieceLuck;
-    }
 
     public int getPieceLuck() {
         return pieceLuck;

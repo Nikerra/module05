@@ -58,7 +58,6 @@ public class Truck {
      * Эмуляция поездки грузовика
      */
     void drive() {
-
         System.out.println("Грузовик едет со склада на склад");
         for (int i = 0; i < 10; i++) {
             System.out.print("*");

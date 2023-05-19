@@ -7,38 +7,52 @@ public class Manager {
     void startWork(){
 
         System.out.println("Работа по перевозке кусочков счастья начинается");
-        System.out.println("На складе находится кусочков счастья в количестве=" + checkPieceLuckWarehouse().size());
+        System.out.println("На складе находится кусочков счастья в количестве=" + resultCheckPieceLuckWarehouse().size());
         Truck truck = new Truck();
         Driver driver = new Driver();
         Loader loader = new Loader();
-        while (checkPieceLuckWarehouse().size() > 0) {
+        while (!resultCheckPieceLuckWarehouse().isEmpty()) {
             isFiveDrive(driver);
-            loader.workBox(warehouseA, truck, checkPieceLuckWarehouse());
-            if (loader.reportLoadTruck(truck)) {
-                driver.waitForDownload(true, truck, loader);
+            startWorkLoader(loader, truck);
+
+            if (waitForDownload(truck)){
+                driver.driveTruck(truck,loader);
             }
         }
-        isFinishWork();
+        if (isFinishWork()){
+            finishWork(driver);
+        }
     }
-    void finishWork(){
+
+    /**
+     *
+     */
+    boolean waitForDownload(Truck truck) {
+        if ((truck.getHowManyBoxesInTruck() == 10) || (truck.getHowManyBoxesInTruck() > 0 && resultCheckPieceLuckWarehouse().isEmpty())) {
+            System.out.println("Грузовик загружен");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    void finishWork(Driver driver){
         System.out.println("Работа по перевозке кусочков счастья завершена");
         System.out.printf("Было перевезено %d кусочков счастья", warehouseA.getPieceLuckCount());
         System.out.println();
         System.out.printf("Было перевезено %d коробок", new Box().getIdBox());
         System.out.println();
-        System.out.printf("Было совершенно всего поездок:%d", new Driver().getCountDrive());
+        System.out.printf("Было совершенно всего поездок:%d", driver.getCountDrive());
         System.out.println();
-        System.out.printf("Было совершенно  поездок на склад В:%d", new Driver().getCountDrive()/2);
+        System.out.printf("Было совершенно  поездок на склад В:%d", driver.getCountDrive()/2);
         System.out.println();
     }
-    ArrayList<PieceLuck> checkPieceLuckWarehouse() {
+    ArrayList<PieceLuck> resultCheckPieceLuckWarehouse() {
         return warehouseA.getPieceLucks();
     }
 
-    void isFinishWork() {
-        if (checkPieceLuckWarehouse().size() == 0) {
-            finishWork();
-        }
+    boolean isFinishWork() {
+        return resultCheckPieceLuckWarehouse().isEmpty();
     }
 
     /**
@@ -46,17 +60,11 @@ public class Manager {
      */
     void isFiveDrive(Driver driver){
         if (driver.getCountDrive() % 5 == 0 && driver.getCountDrive() != 0) {
-            warehouseA.addPieceLuck(112);
+            warehouseA.addPieceLuck();
         }
     }
 
-    void startWorkLoader(){}
-    void truckFull(){}
-    void driveTruck(){}
-    void unloadTruck(){}
-
-    void findTruck(){}
-    void findLoader(){}
-    void findDriver(){}
+    void startWorkLoader(Loader loader, Truck truck){
+        loader.workBox(warehouseA, truck, resultCheckPieceLuckWarehouse());
+    }
 }
-

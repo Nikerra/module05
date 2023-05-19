@@ -37,8 +37,6 @@ package org.example;
 public class Main
 {
     public static void main( String[] args ) {
-        PieceLuck pieceLuck = new PieceLuck(10_591);
-        Warehouse warehouse = new Warehouse();
         Manager manager = new Manager();
         manager.startWork();
     }
