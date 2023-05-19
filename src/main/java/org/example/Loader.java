@@ -7,12 +7,12 @@ public class Loader {
     private static final Box box = new Box();
 
     /**
-     * Старт работы грузчика
-     * проверяет кол-во поездок(каждую пятую добавить на склад кусочков счастья)
-     * проверяет кол-во кусочков(если их нет то завершает работу иначе
-     * берет коробку грузит в нее максимально допустимое кол-во
-     * и грузит коробку в грузовик)
-     * Сообщает водителю, что можно ехать
+     * Метод по загрузке кусочков в коробки и дальнейшей загрузки в грузовик
+     * запускаем цикл пока грузовик не будет заполнен
+     * проверяем наличие кусочков счастья
+     * берем коробку и присваиваем ей новый номер
+     * создаем массив коробку и грузим в нее кусочки
+     * загружаем кусочки в грузовик
      */
     void workBox(Warehouse warehouseA, Truck truck, ArrayList<PieceLuck> pieceLucks) {
 
@@ -22,17 +22,14 @@ public class Loader {
                 box.setIdBox();
                 System.out.println("Присваивает коробки новый id:" + box.getIdBox());
                 ArrayList<PieceLuck> boxPieceLuck = loadIntoBox(warehouseA);
-                if (boxPieceLuck != null) {
-                    System.out.println("Идет загружать коробку в грузовик");
-                    loadIntoTruck(boxPieceLuck, truck);
-                }
+                System.out.println("Идет загружать коробку в грузовик");
+                loadIntoTruck(boxPieceLuck, truck);
             }
         }
     }
 
     /**
-     * @param boxPieceLuck грузит в коробку
-     * @return коробку - массив
+     * Принимаем данные о складе и грузим кусочки счастья со склада в коробки
      */
     private ArrayList<PieceLuck> loadIntoBox(Warehouse warehouse) {
 
@@ -64,7 +61,7 @@ public class Loader {
     private void loadIntoTruck(ArrayList<PieceLuck> boxPieceLuck, Truck truck) {
 
         if (truck.checkHowManyBoxesInTruck()) {
-            truck.setBoxIntoTruck(boxPieceLuck);
+            truck.addBoxIntoTruck(boxPieceLuck);
             truck.addHowManyBoxesInTruck();
             System.out.printf("Загружено %d из %d коробок", truck.getHowManyBoxesInTruck() , truck.getMAX_CAPACITY_TRUCK());
             System.out.println();
@@ -73,15 +70,17 @@ public class Loader {
     }
 
     /**
-     * @return true если в грузовике есть хоть одна коробка
+     * Если в грузовике 10 коробок или если есть хотя бы одна коробка когда кусочков счастья на складе не осталось
      */
-    boolean reportLoadTruck(Truck truck) {
-        return  truck.getHowManyBoxesInTruck() > 0;
+    void reportLoadTruck(Truck truck, Warehouse warehouse) {
+        if ((truck.getHowManyBoxesInTruck() == 10) || (truck.getHowManyBoxesInTruck() > 0 && warehouse.getPieceLucks().isEmpty())) {
+            System.out.println("Грузовик загружен");
+        }
     }
 
     /**
      * Разгружаем коробки пока грузовик не будет пуст
-     * после чего @return flag установленный в false
+     * после чего @return true
      */
     boolean unloadTruck(Truck truck) {
 
@@ -92,12 +91,12 @@ public class Loader {
             if (truck.getHowManyBoxesInTruck() > 0) {
                 System.out.printf("Разгружено %d из %d коробок", (boxUnloadTruckCount+1), truck.getMAX_CAPACITY_TRUCK());
                 truck.remove(truck.getBoxIntoTruck().size() - 1);
-                truck.negativeHowManyBoxesInTruck();
+                truck.substractHowManyBoxesInTruck();
                 System.out.println();
                 System.out.println("Коробки в грузовике:" + truck.getBoxIntoTruck());
             } else {
                 System.out.println("Разгрузка грузовика окончена");
-                return false;
+                return true;
             }
             boxUnloadTruckCount++;
         }

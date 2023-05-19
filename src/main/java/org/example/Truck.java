@@ -27,7 +27,7 @@ public class Truck {
      * @param boxIntoTruck
      * Добавляем наши коробки в грузовик
      */
-    void setBoxIntoTruck(ArrayList<PieceLuck> boxIntoTruck) {
+    void addBoxIntoTruck(ArrayList<PieceLuck> boxIntoTruck) {
         Truck.boxIntoTruck.add(boxIntoTruck);
     }
 
@@ -38,9 +38,7 @@ public class Truck {
     void addHowManyBoxesInTruck() {
         howManyBoxesInTruck++;
     }
-    void negativeHowManyBoxesInTruck() {
-        howManyBoxesInTruck--;
-    }
+    void substractHowManyBoxesInTruck() {howManyBoxesInTruck--;}
 
     int getMAX_CAPACITY_TRUCK() {
         return MAX_CAPACITY_TRUCK;

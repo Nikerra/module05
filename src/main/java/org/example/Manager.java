@@ -3,8 +3,20 @@ package org.example;
 import java.util.ArrayList;
 
 public class Manager {
-    private Warehouse warehouseA = new Warehouse();
-    void startWork(){
+    private final Warehouse warehouseA = new Warehouse();
+
+    /**
+     * Менеджер начинает работу и указывает сколько у нас на старте кусочков счастья для перевозки
+     * находит(создает) грузовик, водителя и грузчика
+     * запускаем цикл по перевозке и ждем когда на складе не останется кусочков счастья
+     * узнаем у водителя какая по счету поездка методом isFiveDriver
+     * даем команду грузчику на работу
+     * ожидаем пока грузовик будет загружен
+     * отправляем водителя с грузчиком на второй склад для разгрузки
+     * проверяем сколько кусочков счастья если больше нуля повторяем цикл
+     * иначе завершаем работу
+     */
+    public void startWork(){
 
         System.out.println("Работа по перевозке кусочков счастья начинается");
         System.out.println("На складе находится кусочков счастья в количестве=" + resultCheckPieceLuckWarehouse().size());
@@ -14,10 +26,8 @@ public class Manager {
         while (!resultCheckPieceLuckWarehouse().isEmpty()) {
             isFiveDrive(driver);
             startWorkLoader(loader, truck);
-
-            if (waitForDownload(truck)){
-                driver.driveTruck(truck,loader);
-            }
+            waitForDownload(truck, warehouseA, loader);
+            driver.driveTruck(truck,loader);
         }
         if (isFinishWork()){
             finishWork(driver);
@@ -25,17 +35,17 @@ public class Manager {
     }
 
     /**
-     *
+     * Передаем три параметра грузчика, склад и грузовик
+     * для запуска метода грузчика отчет о загрузке грузовика
+     * в который передаем параметры грузовика и склада
      */
-    boolean waitForDownload(Truck truck) {
-        if ((truck.getHowManyBoxesInTruck() == 10) || (truck.getHowManyBoxesInTruck() > 0 && resultCheckPieceLuckWarehouse().isEmpty())) {
-            System.out.println("Грузовик загружен");
-            return true;
-        } else {
-            return false;
-        }
+    void waitForDownload(Truck truck, Warehouse warehouse, Loader loader) {
+        loader.reportLoadTruck(truck, warehouse);
     }
 
+    /**
+     * Выводим в консоль данные о проведенной работе
+     */
     void finishWork(Driver driver){
         System.out.println("Работа по перевозке кусочков счастья завершена");
         System.out.printf("Было перевезено %d кусочков счастья", warehouseA.getPieceLuckCount());
@@ -47,11 +57,14 @@ public class Manager {
         System.out.printf("Было совершенно  поездок на склад В:%d", driver.getCountDrive()/2);
         System.out.println();
     }
-    ArrayList<PieceLuck> resultCheckPieceLuckWarehouse() {
+    private ArrayList<PieceLuck> resultCheckPieceLuckWarehouse() {
         return warehouseA.getPieceLucks();
     }
 
-    boolean isFinishWork() {
+    /**
+     * @return возвращаем true когда кусочков счастья не осталось на складе
+     */
+    private boolean isFinishWork() {
         return resultCheckPieceLuckWarehouse().isEmpty();
     }
 
@@ -64,6 +77,12 @@ public class Manager {
         }
     }
 
+    /**
+     * @param loader
+     * @param truck
+     * Запуск работы грузчика, передаем методу данные про грузчика, грузовик и результат подсчета кол-ва
+     * наших кусочков счастья оставшихся для загрузки
+     */
     void startWorkLoader(Loader loader, Truck truck){
         loader.workBox(warehouseA, truck, resultCheckPieceLuckWarehouse());
     }

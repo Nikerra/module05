@@ -3,9 +3,6 @@ package org.example;
 public class Driver {
     private static int countDrive = 0;
 
-    /**
-     * @return
-     */
     int getCountDrive() {
         return countDrive;
     }
@@ -32,7 +29,7 @@ public class Driver {
      */
     private void waitUnloadTruck(Truck truck, Loader loader) {
         System.out.println("Ждет разгрузки");
-        if (!(loader.unloadTruck(truck))) {
+        if ((loader.unloadTruck(truck))) {
             truck.drive();
             parking();
         }
