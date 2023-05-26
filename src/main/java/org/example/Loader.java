@@ -27,7 +27,10 @@ public class Loader {
                 System.out.println("Грузчик берет коробку");
                 Box box = new Box(countBox);
                 System.out.println("Присваивает коробки новый id:" + box.getIdBox());
-                ArrayList<Box> boxPieceLuck = box.loadIntoBox(warehouseA);
+                ArrayList<Box> boxPieceLuck = loadIntoBox(warehouseA, box);
+                System.out.printf("На складе осталось %d кусочков счастья", warehouseA.getPieceLucksHeap().size());
+                System.out.println();
+                System.out.println("Коробка № " + box.getIdBox() + " с кусочками счастья:" + boxPieceLuck);
                 System.out.println("Идет загружать коробку в грузовик");
                 loadIntoTruck(boxPieceLuck, truck);
             }
@@ -37,29 +40,24 @@ public class Loader {
     /**
      * Принимаем данные о складе и грузим кусочки счастья со склада в коробки
      */
-//    private ArrayList<PieceLuck> loadIntoBox(Warehouse warehouse) {
-//
-//        ArrayList<PieceLuck> boxPieceLuck = new ArrayList<>();
-//            if (warehouse.getPieceLucksHeap().size() >= 4) {
-//            System.out.println("Загружает в нее 4 кусочка счастья");
-//            for (int i = 0; i < getMAX_CAPACITY_BOX(); i++) {
-//                boxPieceLuck.add(warehouse.getPieceLucksHeap().get(0));
-//                warehouse.getPieceLucksHeap().remove(0);
-//                warehouse.setPieceLuckCount();
-//            }
-//        } else {
-//            System.out.printf("Загружает в нее %d кусочка счастья%n", warehouse.getPieceLucksHeap().size());
-//            while (!warehouse.getPieceLucksHeap().isEmpty()) {
-//                boxPieceLuck.add(warehouse.getPieceLucksHeap().get(0));
-//                warehouse.getPieceLucksHeap().remove(0);
-//                warehouse.setPieceLuckCount();
-//            }
-//        }
-//        System.out.println("Коробка № " + getIdBox() + " с кусочками счастья:" + boxPieceLuck);
-//        System.out.printf("На складе осталось %d кусочков счастья", warehouse.getPieceLucksHeap().size());
-//        System.out.println();
-//        return boxPieceLuck;
-//    }
+    private ArrayList<Box> loadIntoBox(Warehouse warehouse, Box box) {
+
+        ArrayList<Box> boxPieceLuck = new ArrayList<>();
+        if (warehouse.getPieceLucksHeap().size() >= 4) {
+            System.out.println("Загружает в нее 4 кусочка счастья");
+            for (int i = 0; i < box.getMAX_CAPACITY_BOX(); i++) {
+                box.addPieceLuckIntoBox(boxPieceLuck);
+                warehouse.removePieceLuckIntoWarehouse();
+            }
+        } else {
+            System.out.printf("Загружает в нее %d кусочка счастья%n", warehouse.getPieceLucksHeap().size());
+            while (!warehouse.getPieceLucksHeap().isEmpty()) {
+                box.addPieceLuckIntoBox(boxPieceLuck);
+                warehouse.removePieceLuckIntoWarehouse();
+            }
+        }
+        return boxPieceLuck;
+    }
 
     /**
      * @param boxPieceLuck принимает массив коробку и грузит его в массив грузовик

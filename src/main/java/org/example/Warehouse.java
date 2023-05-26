@@ -33,4 +33,9 @@ public class Warehouse {
             pieceLucksHeap.add(new PieceLuck());
         }
     }
+
+    public void removePieceLuckIntoWarehouse() {
+        getPieceLucksHeap().remove(0);
+        setPieceLuckCount();
+    }
 }
