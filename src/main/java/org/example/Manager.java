@@ -3,8 +3,15 @@ package org.example;
 import java.util.ArrayList;
 
 public class Manager {
-    private final Warehouse warehouseA = new Warehouse();
 
+    private  ArrayList<PieceLuck> pieceLucksHeap;
+
+    {
+        PieceLuck pieceLuck = new PieceLuck(10_591);
+        pieceLucksHeap = createHeapPiceLuck(pieceLuck);
+    }
+
+    private final Warehouse warehouseA = new Warehouse(pieceLucksHeap);
     /**
      * Менеджер начинает работу и указывает сколько у нас на старте кусочков счастья для перевозки
      * находит(создает) грузовик, водителя и грузчика
@@ -19,13 +26,13 @@ public class Manager {
     public void startWork(){
 
         System.out.println("Работа по перевозке кусочков счастья начинается");
-        System.out.println("На складе находится кусочков счастья в количестве=" + resultCheckPieceLuckWarehouse().size());
+        System.out.println("На складе находится кусочков счастья в количестве=" + warehouseA.getPieceLucksHeap().size());
         Truck truck = new Truck();
         Driver driver = new Driver();
         Loader loader = new Loader();
-        while (!resultCheckPieceLuckWarehouse().isEmpty()) {
+        while (!warehouseA.getPieceLucksHeap().isEmpty()) {
             isFiveDrive(driver);
-            startWorkLoader(loader, truck);
+            startWorkLoader(loader, truck, pieceLucksHeap);
             waitForDownload(truck, warehouseA, loader);
             driver.driveTruck(truck,loader);
         }
@@ -83,7 +90,15 @@ public class Manager {
      * Запуск работы грузчика, передаем методу данные про грузчика, грузовик и результат подсчета кол-ва
      * наших кусочков счастья оставшихся для загрузки
      */
-    void startWorkLoader(Loader loader, Truck truck){
-        loader.workBox(warehouseA, truck, resultCheckPieceLuckWarehouse());
+    void startWorkLoader(Loader loader, Truck truck, ArrayList<PieceLuck> pieceLucksHeap){
+        loader.workBox(warehouseA, truck, pieceLucksHeap);
+    }
+
+    public ArrayList<PieceLuck> createHeapPiceLuck(PieceLuck pieceLuck) {
+        ArrayList<PieceLuck> pieceLucksHeap = new ArrayList<>();
+        for (int i = 0; i < pieceLuck.getPieceLuck(); i++){
+            pieceLucksHeap.add(new PieceLuck());
+        }
+        return pieceLucksHeap;
     }
 }
